@@ -9,12 +9,12 @@ export class ToDoAccess {
     constructor(
         private readonly docClient: DocumentClient = new AWS.DynamoDB.DocumentClient(),
         private readonly s3Client: Types = new AWS.S3({ signatureVersion: 'v4' }),
-        private readonly todoTable = process.env.TODOS_TABLE,
-        private readonly s3BucketName = process.env.S3_BUCKET_NAME) {
+        private readonly todoTable = process.env.SERVERLESS_TODOS_TABLE,
+        private readonly s3BucketName = process.env.SERVERLESS_S3_BUCKET_NAME) {
     }
 
-    async getAllToDo(userId: string): Promise<TodoItem[]> {
-        console.log("Getting all todo");
+    async getAllToDoItems(userId: string): Promise<TodoItem[]> {
+        console.log("Getting all todo items");
 
         const params = {
             TableName: this.todoTable,
@@ -34,8 +34,8 @@ export class ToDoAccess {
         return items as TodoItem[];
     }
 
-    async createToDo(todoItem: TodoItem): Promise<TodoItem> {
-        console.log("Creating new todo");
+    async createToDoItem(todoItem: TodoItem): Promise<TodoItem> {
+        console.log("Creating new todo item");
 
         const params = {
             TableName: this.todoTable,
@@ -48,8 +48,8 @@ export class ToDoAccess {
         return todoItem as TodoItem;
     }
 
-    async updateToDo(todoUpdate: TodoUpdate, todoId: string, userId: string): Promise<TodoUpdate> {
-        console.log("Updating todo");
+    async updateToDoItem(todoUpdate: TodoUpdate, todoId: string, userId: string): Promise<TodoUpdate> {
+        console.log("Updating todo item");
 
         const params = {
             TableName: this.todoTable,
@@ -78,8 +78,8 @@ export class ToDoAccess {
         return attributes as TodoUpdate;
     }
 
-    async deleteToDo(todoId: string, userId: string): Promise<string> {
-        console.log("Deleting todo");
+    async deleteToDoItem(todoId: string, userId: string): Promise<string> {
+        console.log("Deleting todo item");
 
         const params = {
             TableName: this.todoTable,
@@ -95,8 +95,8 @@ export class ToDoAccess {
         return "" as string;
     }
 
-    async generateUploadUrl(todoId: string): Promise<string> {
-        console.log("Generating URL");
+    async generateItemUploadUrl(todoId: string): Promise<string> {
+        console.log("Generating URL for toDo item");
 
         const url = this.s3Client.getSignedUrl('putObject', {
             Bucket: this.s3BucketName,
